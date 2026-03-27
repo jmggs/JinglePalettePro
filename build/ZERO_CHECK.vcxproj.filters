@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\local\dev\JinglePalette\build\CMakeFiles\b1b790948a82ff92b04296b2a08691c6\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{77380C53-51EB-377C-BB7A-4BC0B6830360}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

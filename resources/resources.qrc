@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Time_Announce.wav</file>
+        <file>West_Musette.wav</file>
+    </qresource>
+</RCC>

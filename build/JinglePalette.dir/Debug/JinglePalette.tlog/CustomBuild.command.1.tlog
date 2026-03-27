@@ -1,0 +1,24 @@
+^C:\LOCAL\DEV\JINGLEPALETTE\BUILD\CMAKEFILES\AE20544CDB8D36914F56C9DB3849DFE6\QRC_RESOURCES.CPP.RULE
+setlocal
+cd C:\local\dev\JinglePalette\build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_autorcc C:/local/dev/JinglePalette/build/CMakeFiles/JinglePalette_autogen.dir/AutoRcc_resources_3YJK5W5UP7_Info.json Debug
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\LOCAL\DEV\JINGLEPALETTE\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/local/dev/JinglePalette -BC:/local/dev/JinglePalette/build --check-stamp-file C:/local/dev/JinglePalette/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
