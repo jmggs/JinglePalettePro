@@ -1,5 +1,6 @@
 #include "settingsdialog.h"
 #include "settingsmanager.h"
+#include "mainwindow.h"
 #include "languagemanager.h"
 #include "audioengine.h"
 #include <QVBoxLayout>
@@ -12,6 +13,9 @@
 #include <QColorDialog>
 #include <QPainter>
 #include <QLabel>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 SettingsDialog::SettingsDialog(SettingsManager *set, LanguageManager *lang,
                                AudioEngine *audio, QWidget *parent)
@@ -124,15 +128,64 @@ void SettingsDialog::setupUi()
         tabs->addTab(w, tr("Others"));
     }
 
+    // ── Remote HTTP tab ─────────────────────────────────────────────
+    {
+        QWidget *w = new QWidget;
+        QVBoxLayout *v = new QVBoxLayout(w);
+        QHBoxLayout *hPort = new QHBoxLayout;
+        QLabel *lblPort = new QLabel(tr("Port:"));
+        m_spRemotePort = new QSpinBox;
+        m_spRemotePort->setRange(1, 65535);
+        m_spRemotePort->setValue(m_remotePort);
+        hPort->addWidget(lblPort);
+        hPort->addWidget(m_spRemotePort);
+        hPort->addStretch();
+        v->addLayout(hPort);
+
+        m_ckRemoteEnable = new QCheckBox(tr("Enable Remote HTTP"));
+        m_ckRemoteEnable->setChecked(true);
+        v->addWidget(m_ckRemoteEnable);
+        v->addStretch();
+        tabs->addTab(w, tr("Remote HTTP"));
+
+        connect(m_spRemotePort, QOverload<int>::of(&QSpinBox::valueChanged), this, &SettingsDialog::onRemotePortChanged);
+        connect(m_ckRemoteEnable, &QCheckBox::toggled, this, &SettingsDialog::onRemoteEnableToggled);
+    }
+
+    // Adicionar membro para network manager
+    m_net = new QNetworkAccessManager(this);
+
     vMain->addWidget(tabs);
+}
 
-    QDialogButtonBox *bb = new QDialogButtonBox(
-        QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    connect(bb, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
-    connect(bb, &QDialogButtonBox::rejected, this, &QDialog::reject);
-    vMain->addWidget(bb);
+// --- Implementação das funções fora do setupUi ---
+#include "mainwindow.h"
 
-    resize(440, 320);
+
+void SettingsDialog::onRemoteEnableToggled(bool on)
+{
+    if (m_set && m_set->m_mainWindow) {
+        MainWindow *mw = m_set->m_mainWindow;
+        if (mw->httpServer()) {
+            if (on) {
+                mw->httpServer()->start(m_spRemotePort ? m_spRemotePort->value() : 8000);
+            } else {
+                mw->httpServer()->stop();
+            }
+        }
+    }
+}
+
+void SettingsDialog::onRemotePortChanged(int port)
+{
+    m_remotePort = port;
+    // Atualizar porta do servidor HTTP
+    if (m_set && m_set->m_mainWindow) {
+        MainWindow *mw = m_set->m_mainWindow;
+        if (mw->httpServer()) {
+            mw->httpServer()->start(port);
+        }
+    }
 }
 
 void SettingsDialog::loadValues()
@@ -237,3 +290,5 @@ void SettingsDialog::accept()
     m_set->alwaysOnTop   = m_ckOnTop->isChecked();
     QDialog::accept();
 }
+
+// Fim do arquivo: garantir chave de fechamento

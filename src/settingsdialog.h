@@ -12,6 +12,7 @@
 #include <QEvent>
 #include <QMouseEvent>
 #include <QColor>
+#include <QNetworkAccessManager>
 
 class SettingsManager;
 class LanguageManager;
@@ -42,6 +43,7 @@ private:
     SettingsManager  *m_set;
     LanguageManager  *m_lang;
     AudioEngine      *m_audio;
+    QNetworkAccessManager *m_net = nullptr;
 
     // Display tab
     QComboBox  *m_cmbTime    = nullptr;
@@ -63,4 +65,11 @@ private:
     QCheckBox  *m_ckOnTop    = nullptr;
 
     QColor      m_remColor;
+
+    // Remote HTTP tab
+    QSpinBox   *m_spRemotePort = nullptr;
+    QCheckBox  *m_ckRemoteEnable = nullptr;
+    int m_remotePort = 8000;
+    void onRemotePortChanged(int port);
+    void onRemoteEnableToggled(bool on);
 };

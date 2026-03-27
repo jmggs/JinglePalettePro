@@ -19,10 +19,12 @@
 #include "globals.h"
 #include "audioengine.h"
 #include "palettemanager.h"
-#include "settingsmanager.h"
+#include <QObject>
+class SettingsManager;
 #include "languagemanager.h"
 #include "vumeter.h"
 #include "jinglebutton.h"
+#include "httpserver.h"
 
 class SettingsDialog;
 class AboutDialog;
@@ -52,6 +54,7 @@ private slots:
     void onTimer2();    // clock + time announce trigger
     void onTimer3();    // VU meter + remaining time display
     void onTimer5();    // playback state polling
+    void remoteTriggerJingle(int idx);
 
     // Palette tab
     void onAssignToggled(bool on);
@@ -208,4 +211,9 @@ private:
 
     SettingsDialog *m_settingsDlg = nullptr;
     AboutDialog    *m_aboutDlg    = nullptr;
+
+    public:
+        HttpServer *httpServer() const { return m_httpServer; }
+    private:
+        HttpServer *m_httpServer = nullptr;
 };

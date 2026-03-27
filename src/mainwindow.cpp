@@ -1,7 +1,9 @@
 #include "mainwindow.h"
+#include "settingsmanager.h"
 #include "settingsdialog.h"
 #include "aboutdialog.h"
 #include "errorlogger.h"
+#include "httpserver.h"
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -115,6 +117,9 @@ MainWindow::MainWindow(QWidget *parent)
         QPushButton { background-color: #444; color: #eee; border: 2px solid #222; }
     )";
     qApp->setStyleSheet(darkStyle);
+
+    m_httpServer = new HttpServer(this, this);
+    m_httpServer->start(8000);
 }
 
 MainWindow::~MainWindow()
@@ -1156,4 +1161,12 @@ void MainWindow::showError(const QString &msg, bool flash)
     m_lblErrIcon->setVisible(true);
     m_lblErrIcon->setToolTip(msg);
     ErrorLogger::instance().log("", msg);
+}
+
+void MainWindow::remoteTriggerJingle(int idx)
+{
+    if (idx >= 0 && idx < JINGLE_COUNT) {
+        m_vuTrackIdx = idx;
+        playJingle(idx);
+    }
 }

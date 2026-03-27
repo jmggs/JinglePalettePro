@@ -1,7 +1,12 @@
 #pragma once
 #include <QString>
 #include <QColor>
+
 #include <QSettings>
+class MainWindow;
+#include <QMainWindow>
+
+#include "mainwindow.h"
 
 class SettingsManager {
 public:
@@ -57,6 +62,7 @@ public:
     QString paletteIndex;
 
     QString iniPath() const { return m_iniPath; }
+        MainWindow *m_mainWindow = nullptr;
 
 private:
     QString   m_iniPath;
