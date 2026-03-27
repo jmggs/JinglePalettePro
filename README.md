@@ -4,11 +4,10 @@
 **Platform:** Windows · macOS · Linux  
 **Framework:** Qt 6 · CMake · C++17
 
-This is a full cross-platform port of the original Jingle Palette based on original program written by H. Árkosi Róbert (nagyrobi) https://github.com/nagyrobi/Jingle_Palette (Visual Basic 6)  
-to Qt 6 / C++, try to preserving all features of the original.
+This is a full cross-platform port of the original Jingle Palette based on original program written by H. Árkosi Róbert (nagyrobi) https://github.com/nagyrobi/Jingle_Palette 
+(Visual Basic 6) to Qt 6 / C++, trying to preserving all features of the original.
 
-<img width="2010" height="1473" alt="Screenshot from 2026-03-27 19-14-18" src="https://github.com/user-attachments/assets/1892a5ab-97d3-41c4-8769-58a9655c2b81" />
-
+<img width="2000" height="1473" alt="Screenshot from 2026-03-27 19-14-18" src="https://github.com/user-attachments/assets/2d2cb4b4-c8aa-4163-af75-f0e40d3d2764" />
 
 ## Features
 
@@ -32,7 +31,7 @@ to Qt 6 / C++, try to preserving all features of the original.
 |--------------|-------------|
 | Qt           | 6.4 or later |
 | CMake        | 3.16 or later |
-| Compiler     | GCC 9+, Clang 10+, MSVC 2019+ |
+| Compiler     | GCC 9+, Clang 10+, MSVC 2022 |
 
 Install Qt from: https://www.qt.io/download
 
