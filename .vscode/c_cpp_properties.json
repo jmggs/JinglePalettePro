@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/src",
+                "C:/Qt/6.11.0/msvc2022_64/include",
+                "C:/Qt/6.11.0/msvc2022_64/include/QtCore",
+                "C:/Qt/6.11.0/msvc2022_64/include/QtGui",
+                "C:/Qt/6.11.0/msvc2022_64/include/QtWidgets",
+                "C:/Qt/6.11.0/msvc2022_64/include/QtMultimedia",
+                "C:/Qt/6.11.0/msvc2022_64/include/QtNetwork",
+                "C:/Qt/6.11.0/msvc2022_64/include/QtMultimediaWidgets",
+                "${workspaceFolder}/build/JinglePalette_autogen/include_Debug"
+            ],
+            "defines": [
+                "WIN32",
+                "_WINDOWS",
+                "QT_CORE_LIB",
+                "QT_GUI_LIB",
+                "QT_WIDGETS_LIB",
+                "QT_MULTIMEDIA_LIB",
+                "QT_NETWORK_LIB",
+                "QT_MULTIMEDIAWIDGETS_LIB"
+            ],
+            "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.3x.x/bin/Hostx64/x64/cl.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}

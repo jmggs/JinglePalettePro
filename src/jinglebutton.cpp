@@ -16,11 +16,24 @@ void JingleButton::setPlaying(bool on)
 {
     m_playing = on;
     m_paused  = false;
+    m_waitingToStop = false;
     if (on) {
         setStyleSheet("QPushButton { background-color: #1aff1a; color: black; font-size: 13px; text-align: center; border: 2px solid #006600; font-weight: bold; }");
     } else {
         setStyleSheet("QPushButton { background-color: #444; color: #eee; font-size: 13px; text-align: center; border: 2px solid #222; }");
         setChecked(false);
+    }
+    update();
+}
+
+void JingleButton::setWaitingToStop(bool on)
+{
+    m_waitingToStop = on;
+    if (on) {
+        setStyleSheet("QPushButton { background-color: #ffff00; color: black; font-size: 13px; text-align: center; border: 2px solid #bbaa00; font-weight: bold; }");
+    } else if (!m_playing) {
+        // Sempre volta ao cinzento se não está a tocar
+        setStyleSheet("QPushButton { background-color: #444; color: #eee; font-size: 13px; text-align: center; border: 2px solid #222; }");
     }
     update();
 }

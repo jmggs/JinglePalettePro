@@ -12,7 +12,7 @@
 AboutDialog::AboutDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle(tr("About Jingle Palette"));
+    setWindowTitle(tr("Sobre Jingle Palette Pro v0.1"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setModal(true);
     setFixedSize(560, 240);
@@ -24,7 +24,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 
     // Title + version
     QHBoxLayout *h1 = new QHBoxLayout;
-    QLabel *lblTitle = new QLabel("<b>Jingle Palette</b>");
+    QLabel *lblTitle = new QLabel("<b>Jingle Palette Pro</b>");
     QLabel *lblVer   = new QLabel(QString("Version %1")
                                       .arg(QApplication::applicationVersion()));
     QLabel *lblDesc  = new QLabel(tr("An instant jingle player designed for radio studios."));

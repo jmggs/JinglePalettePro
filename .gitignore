@@ -1,0 +1,67 @@
+
+# Build folders
+build/
+built/
+out/
+bin/
+Debug/
+Release/
+
+# macOS app bundles
+*.app/
+
+
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+install_manifest.txt
+
+
+
+# Visual Studio
+.vs/
+*.sln
+*.vcxproj*
+*.filters
+
+
+
+# Qt
+*.qmake.stash
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.autosave
+
+
+
+# Executáveis e objetos
+*.exe
+*.dll
+*.out
+*.o
+*.obj
+*.so
+*.dylib
+
+
+
+# Outros
+*.log
+*.tmp
+.DS_Store
+*~
+*.swp
+*.bak
+
+# Gerados pelo Qt/CMake
+moc_*
+qrc_*
+ui_*
+
+# Test output
+Testing/

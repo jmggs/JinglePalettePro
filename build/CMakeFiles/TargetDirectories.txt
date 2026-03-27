@@ -1,3 +1,0 @@
-C:/local/dev/JinglePalette/build/CMakeFiles/JinglePalette.dir
-C:/local/dev/JinglePalette/build/CMakeFiles/ALL_BUILD.dir
-C:/local/dev/JinglePalette/build/CMakeFiles/ZERO_CHECK.dir

@@ -1,12 +1,12 @@
 #!/bin/bash
 # ─────────────────────────────────────────────────────────────────────────────
-# Jingle Palette - Qt/C++ Build Script
+# Jingle Palette Pro - Qt/C++ Build Script
 # Requires: Qt 6.x, CMake 3.16+, C++17 compiler
 # ─────────────────────────────────────────────────────────────────────────────
 
 set -e
 
-echo "=== Jingle Palette Build ==="
+echo "=== Jingle Palette Pro Build ==="
 
 # Create build directory
 mkdir -p build

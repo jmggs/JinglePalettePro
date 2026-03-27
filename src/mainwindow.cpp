@@ -94,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_timer1->start(); m_timer2->start();
     m_timer3->start(); m_timer5->start();
 
-    setWindowTitle("Jingle Palette");
+    setWindowTitle("Jingle Palette Pro v0.1");
     updateDisplayTime();
     updatePaletteDisplay();
 
@@ -295,8 +295,11 @@ void MainWindow::setupVuMeter()
     m_vuR->setObjectName("VuR");
     m_vuL->setFixedWidth(14);
     m_vuR->setFixedWidth(14);
-    m_vuL->setMinimumHeight(60);
-    m_vuR->setMinimumHeight(60);
+    m_vuL->setMinimumHeight(320);
+    m_vuR->setMinimumHeight(320);
+    // Adicionar margem inferior para afastar do texto L/R
+    m_vuL->setContentsMargins(0, 0, 0, 16);
+    m_vuR->setContentsMargins(0, 0, 0, 16);
 }
 
 void MainWindow::setupTabPanel()
@@ -665,6 +668,12 @@ void MainWindow::playJingle(int idx)
         return;
     }
 
+    // Se outro jingle está tocando, marcar como aguardando parar
+    for (int i = 0; i < JINGLE_COUNT; ++i) {
+        if (i != idx && m_audio->isPlaying(i)) {
+            m_jingBtns[i]->setWaitingToStop(true);
+        }
+    }
     if (m_audio->isPlaying(idx)) {
         if (m_ckAutoRep->isChecked()) {
             m_audio->seekJingle(idx, 0);
@@ -696,6 +705,8 @@ void MainWindow::stopAll()
 void MainWindow::onJingleFinished(int idx)
 {
     m_jingBtns[idx]->setPlaying(false);
+    m_jingBtns[idx]->setPaused(false);
+    m_jingBtns[idx]->setWaitingToStop(false);
     if (m_vuTrackIdx == idx) m_vuTrackIdx = -1;
 }
 
@@ -754,7 +765,7 @@ void MainWindow::onMenuClear()
 {
     if (m_ctxIdx < 0) return;
     if (m_audio->jings[m_ctxIdx].path.isEmpty()) return;
-    if (QMessageBox::question(this, "Jingle Palette",
+    if (QMessageBox::question(this, "Jingle Palette Pro v0.1",
             m_lang->entry("mMsdb", tr("Clear this jingle button?")),
             QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
         m_audio->stopJingle(m_ctxIdx);

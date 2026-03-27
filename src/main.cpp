@@ -6,9 +6,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    app.setApplicationName("Jingle Palette");
-    app.setApplicationVersion("4.4.5");
-    app.setOrganizationName("Jingle Palette");
+        app.setApplicationName("Jingle Palette Pro");
+        app.setApplicationVersion("0.1");
+        app.setOrganizationName("Jingle Palette Pro");
 
     // Set working directory to the executable directory
     QDir::setCurrent(QCoreApplication::applicationDirPath());

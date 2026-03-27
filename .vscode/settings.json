@@ -1,0 +1,12 @@
+{
+    // VS Code terminal profile para abrir já com ambiente MSVC
+    "terminal.integrated.profiles.windows": {
+        "VSDevCmd": {
+            "path": "C:/Windows/System32/cmd.exe",
+            "args": ["/k", "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat\""],
+            "icon": "terminal-cmd",
+            "overrideName": true
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "VSDevCmd"
+}

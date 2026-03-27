@@ -1,11 +1,11 @@
-# Jingle Palette — Qt/C++ Port
+# Jingle Palette Pro — Qt/C++ Port
 
-**Version:** 4.4.5  
+**Version:** v0.1  
 **Platform:** Windows · macOS · Linux  
 **Framework:** Qt 6 · CMake · C++17
 
-This is a full cross-platform port of the original Jingle Palette (Visual Basic 6)  
-to Qt 6 / C++, preserving all features of the original.
+This is a full cross-platform port of the original Jingle Palette based on original program written by H. Árkosi Róbert (nagyrobi) https://github.com/nagyrobi/Jingle_Palette (Visual Basic 6)  
+to Qt 6 / C++, try to preserving all features of the original.
 
 ---
 
