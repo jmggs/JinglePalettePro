@@ -7,7 +7,8 @@
 This is a full cross-platform port of the original Jingle Palette based on original program written by H. Árkosi Róbert (nagyrobi) https://github.com/nagyrobi/Jingle_Palette (Visual Basic 6)  
 to Qt 6 / C++, try to preserving all features of the original.
 
----
+<img width="2010" height="1473" alt="Screenshot from 2026-03-27 19-14-18" src="https://github.com/user-attachments/assets/1892a5ab-97d3-41c4-8769-58a9655c2b81" />
+
 
 ## Features
 
