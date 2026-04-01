@@ -171,6 +171,7 @@ private:
     int     m_flashCount    = 0;
     bool    m_taJingWaiting = false;
     QString m_appPath;
+    QString m_dataPath;
 
     SettingsDialog *m_settingsDlg = nullptr;
     AboutDialog    *m_aboutDlg    = nullptr;

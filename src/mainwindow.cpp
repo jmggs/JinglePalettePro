@@ -13,9 +13,11 @@
 #include <QCloseEvent>
 #include <QScreen>
 #include <QDateTime>
+#include <QFile>
 #include <QFileInfo>
 #include <QDir>
 #include <QSizePolicy>
+#include <QStandardPaths>
 #include <QFont>
 #include <QPalette>
 #include <QTextStream>
@@ -115,17 +117,36 @@ MainWindow::MainWindow(QWidget *parent)
 {
     // Inicializar settings antes de qualquer outra coisa
     m_appPath = QCoreApplication::applicationDirPath();
-    m_set = new SettingsManager(m_appPath + "/jp.ini");
-    if (!QFileInfo::exists(m_appPath + "/jp.ini"))
+    m_dataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    if (m_dataPath.isEmpty())
+        m_dataPath = m_appPath;
+    QDir().mkpath(m_dataPath);
+
+    const QString settingsPath = m_dataPath + "/jp.ini";
+    const QString palettePath = m_dataPath + "/palette.ini";
+    const QString languagePath = QFileInfo::exists(m_dataPath + "/language.ini")
+        ? m_dataPath + "/language.ini"
+        : m_appPath + "/language.ini";
+
+    // Migrate old portable files on first run of the installed app.
+    if (!QFileInfo::exists(settingsPath) && QFileInfo::exists(m_appPath + "/jp.ini"))
+        QFile::copy(m_appPath + "/jp.ini", settingsPath);
+    if (!QFileInfo::exists(palettePath) && QFileInfo::exists(m_appPath + "/palette.ini"))
+        QFile::copy(m_appPath + "/palette.ini", palettePath);
+    if (!QFileInfo::exists(m_dataPath + "/language.ini") && QFileInfo::exists(m_appPath + "/language.ini"))
+        QFile::copy(m_appPath + "/language.ini", m_dataPath + "/language.ini");
+
+    m_set = new SettingsManager(settingsPath);
+    if (!QFileInfo::exists(settingsPath))
         m_set->applyDefaults(m_appPath);
     m_set->load();
 
     ErrorLogger::instance().setEnabled(m_set->errorLog);
-    ErrorLogger::instance().setFilePath(m_appPath + "/Error.log");
+    ErrorLogger::instance().setFilePath(m_dataPath + "/Error.log");
     ErrorLogger::instance().log("", "Starting program...");
 
-    m_pal  = new PaletteManager(m_appPath + "/palette.ini");
-    m_lang = new LanguageManager(m_appPath + "/language.ini");
+    m_pal  = new PaletteManager(palettePath);
+    m_lang = new LanguageManager(languagePath);
     m_lang->setLanguage(m_set->language);
 
     m_audio = new AudioEngine(this);

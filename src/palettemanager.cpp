@@ -31,6 +31,7 @@ void PaletteManager::savePalette(const QString &name, const JingleData jings[JIN
 {
     QSettings s(m_palPath, QSettings::IniFormat);
     // s.setIniCodec("UTF-8"); // Removido para Qt6
+    s.remove(name);
     s.beginGroup(name);
 
     for (int i = 0; i < JINGLE_COUNT; ++i) {
