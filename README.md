@@ -7,6 +7,8 @@
 This is Jingle Palette Pro, a full cross-platform port of the original Jingle Palette (Visual Basic 6)  
 to Qt 6 / C++, preserving all features of the original.
 
+<img width="1000" height="870" alt="Screenshot 2026-04-01 at 15 10 26" src="https://github.com/user-attachments/assets/93b4f7d3-c8f7-4484-b86c-6886dd0560e8" />
+
 ---
 
 ## Features
