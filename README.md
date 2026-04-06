@@ -74,6 +74,20 @@ sudo apt install /absolute/path/to/jingle-palette-pro_0.3.0_amd64.deb
 sudo dpkg -i jingle-palette-pro_0.3.0_amd64.deb
 ```
 
+### macOS (build + DMG packaging)
+```bash
+chmod +x build_scripts/macos/*.sh
+
+# Build .app
+./build_scripts/macos/build.sh
+
+# Build self-contained .dmg using macdeployqt
+./build_scripts/macos/package_dmg.sh
+```
+
+Generated file:
+- `dist/Jingle_Palette_Pro-v0.3.0-macOS.dmg`
+
 ### Linux / macOS (legacy root script)
 ```bash
 chmod +x build.sh
@@ -85,6 +99,17 @@ chmod +x build.sh
 2. File → Open → select `CMakeLists.txt`
 3. Choose a Qt 6 kit
 4. Press **Build** (Ctrl+B)
+
+### Windows (scripts)
+```bat
+build_scripts\windows\build.bat
+build_scripts\windows\rebuild.bat
+build_scripts\windows\package_installer.bat
+```
+
+Requirements for packaging:
+- Qt tools in PATH (windeployqt)
+- Inno Setup in PATH (iscc)
 
 ### Manual CMake
 ```bash
@@ -103,6 +128,14 @@ JinglePalettePro-main/
 ├── build.sh
 ├── make_deb.sh
 ├── build_scripts/
+│   ├── macos/
+│   │   ├── build.sh
+│   │   ├── rebuild.sh
+│   │   └── package_dmg.sh
+│   ├── windows/
+│   │   ├── build.bat
+│   │   ├── rebuild.bat
+│   │   └── package_installer.bat
 │   └── linux/
 │       ├── build.sh
 │       ├── rebuild.sh

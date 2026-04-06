@@ -66,6 +66,16 @@ set_target_properties(JinglePalettePro PROPERTIES
     OUTPUT_NAME "Jingle Palette Pro"
 )
 
+if(APPLE)
+    set_target_properties(JinglePalettePro PROPERTIES
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_GUI_IDENTIFIER "com.jmggs.jinglepalettepro"
+        MACOSX_BUNDLE_BUNDLE_NAME "Jingle Palette Pro"
+        MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+        MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
+    )
+endif()
+
 target_link_libraries(JinglePalettePro PRIVATE
     Qt6::Core
     Qt6::Gui
