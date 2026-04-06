@@ -126,7 +126,6 @@ private:
 
     // Tab: Palettes
     QCheckBox   *m_ckAssign   = nullptr;
-    QLineEdit   *m_txtAssign  = nullptr;
     QPushButton *m_btSave     = nullptr;
     QPushButton *m_btNew      = nullptr;
     QLineEdit   *m_txtSave    = nullptr;

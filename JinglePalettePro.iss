@@ -1,8 +1,8 @@
 [Setup]
 AppId={{A3F6A99F-7C1B-4D66-A5F8-4F44F8D1C201}
 AppName=Jingle Palette Pro
-AppVersion=0.2
-AppVerName=Jingle Palette Pro v0.2
+AppVersion=0.3.0
+AppVerName=Jingle Palette Pro v0.3.0
 AppPublisher=jmggs
 AppPublisherURL=https://github.com/jmggs/JinglePalettePro
 AppSupportURL=https://github.com/jmggs/JinglePalettePro
@@ -12,7 +12,7 @@ DefaultGroupName=Jingle Palette Pro
 DisableProgramGroupPage=yes
 LicenseFile=
 OutputDir=build\installer
-OutputBaseFilename=JinglePalettePro_v0.2_Setup
+OutputBaseFilename=JinglePalettePro_v0.3.0_Setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

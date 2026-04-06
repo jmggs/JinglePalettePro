@@ -40,6 +40,10 @@ void SettingsManager::load()
     autoMix         = m_s->value("AutoMix",       0).toInt();
 
     timeAnnouncer   = m_s->value("TimeAnnouncer", "").toString();
+    if (timeAnnouncer.isEmpty() || !QFileInfo::exists(timeAnnouncer)) {
+        QString fallback = "/home/jomi/Downloads/JinglePalettePro-main/resources/Time_Announce.wav";
+        timeAnnouncer = QFileInfo::exists(fallback) ? fallback : "";
+    }
     timeAnnMin      = m_s->value("TimeAnnMin",    59).toInt();
     timeAnnSec      = m_s->value("TimeAnnSec",    55).toInt();
     timeAnnDel      = m_s->value("TimeAnnDel",    4).toInt();
@@ -118,8 +122,10 @@ void SettingsManager::applyDefaults(const QString &appPath)
     autoRepeat      = 0;
     autoMix         = 0;
 
-    QString wav = appPath + "/Time_Announce.wav";
-    timeAnnouncer   = QFileInfo(wav).exists() ? wav : "";
+    QString wav = "/home/jomi/Downloads/JinglePalettePro-main/resources/Time_Announce.wav";
+    if (!QFileInfo::exists(wav))
+        wav = appPath + "/Time_Announce.wav";
+    timeAnnouncer   = QFileInfo::exists(wav) ? wav : "";
     timeAnnMin      = 59;
     timeAnnSec      = 55;
     timeAnnDel      = 4;

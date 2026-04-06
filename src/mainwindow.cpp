@@ -157,6 +157,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     applyDarkTheme();
     setupUi();
+
+    // Connect each jingle player's durationChanged to update button duration text
+    for (int i = 0; i < JINGLE_COUNT; ++i) {
+        connect(m_audio->jings[i].player.get(), &QMediaPlayer::durationChanged,
+                this, [this, i](qint64 dur) {
+                    if (dur > 0) {
+                        int secs = static_cast<int>(dur / 1000);
+                        m_jingBtns[i]->setDurationText(
+                            QString("%1:%2").arg(secs / 60).arg(secs % 60, 2, 10, QChar('0')));
+                    }
+                });
+    }
+
     applySettings();
     restoreWindowState();
 
@@ -340,7 +353,7 @@ void MainWindow::setupUi()
         "QPushButton {"
         "  background: #3a3a3a;"
         "  color: #ccc;"
-        "  font-size: 20px;"
+        "  font-size: 18px;"
         "  border: 1px solid #555;"
         "  border-radius: 4px;"
         "  font-weight: bold;"
@@ -356,7 +369,7 @@ void MainWindow::setupUi()
         m_jingBtns[i]->setMaximumHeight(80);
         m_jingBtns[i]->setStyleSheet(gridBtnStyle);
         QFont f = m_jingBtns[i]->font();
-        f.setPointSize(20);
+        f.setPointSize(18);
         f.setBold(true);
         m_jingBtns[i]->setFont(f);
         connect(m_jingBtns[i], &QPushButton::clicked,
@@ -410,11 +423,7 @@ void MainWindow::setupUi()
 
         QHBoxLayout *hAssign = new QHBoxLayout;
         m_ckAssign  = new QCheckBox(tr("Assign Jingle To Button"));
-        m_txtAssign = new QLineEdit;
-        m_txtAssign->setPlaceholderText("");
-        m_txtAssign->setMaximumWidth(80);
         hAssign->addWidget(m_ckAssign);
-        hAssign->addWidget(m_txtAssign);
         hAssign->addStretch();
 
         m_btSave = new QPushButton(tr("Save Current Palette"));
@@ -582,14 +591,14 @@ void MainWindow::setupUi()
 
 
     // Usar exatamente o mesmo tamanho e fonte dos botões da grid 5x6
-    int gridBtnFontSize = 20;
+    int gridBtnFontSize = 18;
 
     // PAUSE: igual ao grid, só muda cor
     QString pauseStyle =
         "QPushButton {"
         "  background: #5a5a1f; color: #fff;"
         "  border: 1px solid #888; border-radius: 4px;"
-        "  font-size: 20px; font-weight: bold;"
+        "  font-size: 18px; font-weight: bold;"
         "}"
         "QPushButton:hover  { background: #7a7a2f; color: #fff; }"
         "QPushButton:checked { background: #ffff66; color: #222; border-color: #cccc33; }";
@@ -599,7 +608,7 @@ void MainWindow::setupUi()
         "QPushButton {"
         "  background: #661a1a; color: #fff;"
         "  border: 1px solid #a33; border-radius: 4px;"
-        "  font-size: 20px; font-weight: bold;"
+        "  font-size: 18px; font-weight: bold;"
         "}"
         "QPushButton:hover  { background: #992a2a; color: #fff; }"
         "QPushButton:checked { background: #ff3333; color: #fff; border-color: #b71c1c; }";
@@ -947,6 +956,7 @@ void MainWindow::onMenuClear()
     m_audio->jings[m_ctxIdx].inDebt = false;
     m_audio->loadJingle(m_ctxIdx, "");
     m_jingBtns[m_ctxIdx]->setText(QString::number(m_ctxIdx+1));
+    m_jingBtns[m_ctxIdx]->setDurationText("");
     m_jingBtns[m_ctxIdx]->setPlaying(false);
     m_jingBtns[m_ctxIdx]->setChecked(false);
     m_jingBtns[m_ctxIdx]->setLoopIndicatorVisible(false);
@@ -1060,6 +1070,7 @@ void MainWindow::onNewPalette()
         m_audio->loadJingle(i, "");
         if (m_jingBtns[i]) {
             m_jingBtns[i]->setText(QString::number(i+1));
+            m_jingBtns[i]->setDurationText("");
             m_jingBtns[i]->setPlaying(false);
             m_jingBtns[i]->setChecked(false);
             m_jingBtns[i]->setLoopIndicatorVisible(false);

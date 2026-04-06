@@ -14,6 +14,7 @@ public:
     void setLoopIndicatorVisible(bool v);
     bool loopIndicatorVisible() const { return m_showLoop; }
     void setBaseColor(const QColor &c);
+    void setDurationText(const QString &t) { m_durationText = t; update(); }
 
 signals:
     void rightClicked(int index);
@@ -28,4 +29,5 @@ private:
     bool   m_paused   = false;
     bool   m_showLoop = false;
     QColor m_baseColor;
+    QString m_durationText;
 };

@@ -1,6 +1,6 @@
 # Jingle Palette Pro — Qt/C++ Port
 
-**Version:** v0.2
+**Version:** v0.3.0
 **Platform:** Windows · macOS · Linux  
 **Framework:** Qt 6 · CMake · C++17
 
@@ -43,7 +43,38 @@ Install Qt from: https://www.qt.io/download
 
 ## Build Instructions
 
-### Linux / macOS
+### Linux (recommended scripts)
+```bash
+chmod +x build_scripts/linux/*.sh
+
+# Incremental build
+./build_scripts/linux/build.sh
+
+# Clean rebuild
+./build_scripts/linux/rebuild.sh
+```
+
+### Linux Packaging (self-contained)
+```bash
+# AppImage (self-contained)
+./build_scripts/linux/build_appimage.sh
+
+# Full .deb from AppDir bundle (self-contained, larger package)
+./build_scripts/linux/build_deb_full.sh
+```
+
+Generated files:
+- `dist/Jingle_Palette_Pro-0.3.0-x86_64.AppImage`
+- `jingle-palette-pro_0.3.0_amd64.deb`
+
+Install the `.deb`:
+```bash
+sudo apt install /absolute/path/to/jingle-palette-pro_0.3.0_amd64.deb
+# or
+sudo dpkg -i jingle-palette-pro_0.3.0_amd64.deb
+```
+
+### Linux / macOS (legacy root script)
 ```bash
 chmod +x build.sh
 ./build.sh
@@ -67,9 +98,17 @@ cmake --build . --parallel
 ## Project Structure
 
 ```
-JinglePalette/  ← source tree for Jingle Palette Pro
+JinglePalettePro-main/
 ├── CMakeLists.txt
 ├── build.sh
+├── make_deb.sh
+├── build_scripts/
+│   └── linux/
+│       ├── build.sh
+│       ├── rebuild.sh
+│       ├── build_appimage.sh
+│       ├── build_deb.sh
+│       └── build_deb_full.sh
 ├── src/
 │   ├── main.cpp               ← Entry point
 │   ├── mainwindow.h/.cpp      ← Main window (buttons, display, timers)
@@ -99,6 +138,8 @@ JinglePalette/  ← source tree for Jingle Palette Pro
 | `palette.ini`    | Palettes (created on first run)  |
 | `language.ini`   | Language strings                 |
 | `Time_Announce.wav` | Default time announce sound   |
+
+For packaged Linux builds (`.deb`/`.AppImage`), these files are bundled automatically.
 
 ---
 

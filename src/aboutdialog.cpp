@@ -6,8 +6,6 @@
 #include <QPushButton>
 #include <QFrame>
 #include <QApplication>
-#include <QDesktopServices>
-#include <QUrl>
 
 AboutDialog::AboutDialog(QWidget *parent)
     : QDialog(parent)
@@ -15,12 +13,12 @@ AboutDialog::AboutDialog(QWidget *parent)
     setWindowTitle(tr("About Jingle Palette Pro"));
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setModal(true);
-    setFixedSize(620, 340);
+    setFixedSize(780, 460);
 
     QVBoxLayout *v = new QVBoxLayout(this);
 
     QLabel *content = new QLabel(
-        "<b>Jingle Palette Pro v0.2</b><br><br>"
+        "<b>Jingle Palette Pro v0.3.0</b><br><br>"
         "This is a full cross-platform port of the original Jingle Palette based on original program "
         "written by H. Árkosi Róbert (nagyrobi)<br><br>"
         "<a href='https://github.com/jmggs/JinglePalettepro'>https://github.com/jmggs/JinglePalettepro</a><br><br>"
@@ -31,9 +29,9 @@ AboutDialog::AboutDialog(QWidget *parent)
         "Z X C V B - Jingles 16-20<br>"
         "Space - Pause<br><br>"
         "<b>Http API:</b><br>"
-        "http://&lt;IP&gt;:8000/<br>"
-        "/01 to /30 - Jingles<br>"
-        "/pause /stop /automix /autorepeat");
+        "Base: http://localhost:8000/<br>"
+        "Jingles: /01 to /30 (ex: http://localhost:8000/01)<br>"
+        "Commands: /pause /stop /automix /autorepeat");
     content->setWordWrap(true);
     content->setOpenExternalLinks(true);
     content->setTextInteractionFlags(Qt::TextBrowserInteraction);

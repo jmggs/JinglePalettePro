@@ -1,7 +1,7 @@
 #!/bin/bash
 # =============================================================================
 # Jingle Palette Pro — .deb autossuficiente
-# Qt libs incluídas | GStreamer do sistema | Ícone + menu de aplicações
+# Qt libs incluídas | GStreamer incluído | Ícone + menu de aplicações
 # Uso: ./make_deb.sh
 # =============================================================================
 
@@ -10,7 +10,7 @@ set -e
 APP_NAME="jingle-palette-pro"
 APP_BINARY="Jingle Palette Pro"
 DISPLAY_NAME="Jingle Palette Pro"
-VERSION="0.1"
+VERSION="0.3.0"
 ARCH="amd64"
 MAINTAINER="jomi <jomi@jsworkstation>"
 DEB_NAME="${APP_NAME}_${VERSION}_${ARCH}.deb"
@@ -68,6 +68,8 @@ mkdir -p "${PKG_DIR}${INSTALL_DIR}/plugins/platforms"
 mkdir -p "${PKG_DIR}${INSTALL_DIR}/plugins/audio"
 mkdir -p "${PKG_DIR}${INSTALL_DIR}/plugins/multimedia"
 mkdir -p "${PKG_DIR}${INSTALL_DIR}/plugins/imageformats"
+mkdir -p "${PKG_DIR}${INSTALL_DIR}/gstreamer/plugins"
+mkdir -p "${PKG_DIR}${INSTALL_DIR}/gstreamer/libexec"
 mkdir -p "${PKG_DIR}${INSTALL_DIR}/data"
 mkdir -p "${PKG_DIR}/usr/bin"
 mkdir -p "${PKG_DIR}/usr/share/applications"
@@ -155,7 +157,39 @@ for f in $(find "${QT_PLUGINS}/imageformats" \
 done
 info "Plugins copiados"
 
-# ─── 8. qt.conf ──────────────────────────────────────────────────────────────
+# ─── 8. GStreamer runtime (libs + plugins) ──────────────────────────────────
+step "A copiar GStreamer"
+
+GST_PLUGIN_DIR=$(pkg-config --variable=pluginsdir gstreamer-1.0 2>/dev/null || \
+                 echo "/usr/lib/x86_64-linux-gnu/gstreamer-1.0")
+if [ -d "${GST_PLUGIN_DIR}" ]; then
+    cp -L "${GST_PLUGIN_DIR}"/*.so "${PKG_DIR}${INSTALL_DIR}/gstreamer/plugins/" 2>/dev/null || true
+    info "Plugins GStreamer copiados de ${GST_PLUGIN_DIR}"
+else
+    warn "Diretório de plugins GStreamer não encontrado: ${GST_PLUGIN_DIR}"
+fi
+
+# Tenta copiar o gst-plugin-scanner para ambientes onde for necessário
+for scanner in \
+    /usr/libexec/gstreamer-1.0/gst-plugin-scanner \
+    /usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-plugin-scanner; do
+    if [ -f "$scanner" ]; then
+        cp -L "$scanner" "${PKG_DIR}${INSTALL_DIR}/gstreamer/libexec/" 2>/dev/null || true
+        info "gst-plugin-scanner incluído"
+        break
+    fi
+done
+
+# Libs base do GStreamer / GLib em fallback (a maioria já vem por dependência Qt/ldd)
+for lib in libgstreamer-1.0.so.0 libgstbase-1.0.so.0 libgstpbutils-1.0.so.0 \
+           libgstaudio-1.0.so.0 libgstvideo-1.0.so.0 libgsttag-1.0.so.0 \
+           libglib-2.0.so.0 libgobject-2.0.so.0 libgmodule-2.0.so.0 \
+           libgio-2.0.so.0 liborc-0.4.so.0; do
+    copy_lib "$lib"
+done
+info "GStreamer incluído"
+
+# ─── 9. qt.conf ──────────────────────────────────────────────────────────────
 cat > "${PKG_DIR}${INSTALL_DIR}/bin/qt.conf" << EOF
 [Paths]
 Prefix   = ${INSTALL_DIR}
@@ -164,7 +198,7 @@ Libraries = ${INSTALL_DIR}/lib
 EOF
 info "qt.conf criado"
 
-# ─── 9. Dados ────────────────────────────────────────────────────────────────
+# ─── 10. Dados ───────────────────────────────────────────────────────────────
 step "A copiar dados"
 for f in language.ini resources/language.ini; do
     [ -f "$f" ] && cp "$f" "${PKG_DIR}${INSTALL_DIR}/data/language.ini" && break
@@ -177,7 +211,7 @@ for f in West_Musette.wav resources/West_Musette.wav; do
 done
 info "Dados copiados"
 
-# ─── 10. Ícone ───────────────────────────────────────────────────────────────
+# ─── 11. Ícone ───────────────────────────────────────────────────────────────
 step "A criar ícone"
 SVG_FILE="/tmp/${APP_NAME}.svg"
 cat > "${SVG_FILE}" << 'SVGEOF'
@@ -238,7 +272,7 @@ if [ "$PNG_OK" = false ]; then
 fi
 info "Ícone criado"
 
-# ─── 11. Launcher /usr/bin ───────────────────────────────────────────────────
+# ─── 12. Launcher /usr/bin ───────────────────────────────────────────────────
 step "A criar launcher"
 cat > "${PKG_DIR}/usr/bin/${APP_NAME}" << WRAPEOF
 #!/bin/bash
@@ -257,9 +291,12 @@ export LD_LIBRARY_PATH="\$INSTALL_DIR/lib:\$LD_LIBRARY_PATH"
 export QT_PLUGIN_PATH="\$INSTALL_DIR/plugins"
 export QT_QPA_PLATFORM_PLUGIN_PATH="\$INSTALL_DIR/plugins/platforms"
 
-# GStreamer: usa o do sistema
-unset GST_PLUGIN_PATH
-unset GST_PLUGIN_SYSTEM_PATH_1_0
+# GStreamer autossuficiente
+export GST_PLUGIN_PATH="\$INSTALL_DIR/gstreamer/plugins"
+export GST_PLUGIN_SYSTEM_PATH_1_0=""
+if [ -x "\$INSTALL_DIR/gstreamer/libexec/gst-plugin-scanner" ]; then
+    export GST_PLUGIN_SCANNER="\$INSTALL_DIR/gstreamer/libexec/gst-plugin-scanner"
+fi
 
 cd "\$USER_DIR"
 exec "\$INSTALL_DIR/bin/${APP_BINARY}" "\$@"
@@ -267,11 +304,11 @@ WRAPEOF
 chmod 755 "${PKG_DIR}/usr/bin/${APP_NAME}"
 info "Launcher: /usr/bin/${APP_NAME}"
 
-# ─── 12. .desktop ────────────────────────────────────────────────────────────
+# ─── 13. .desktop ────────────────────────────────────────────────────────────
 step "A criar entrada no menu"
 cat > "${PKG_DIR}/usr/share/applications/${APP_NAME}.desktop" << EOF
 [Desktop Entry]
-Version=1.0
+Version=0.3.0
 Type=Application
 Name=${DISPLAY_NAME}
 GenericName=Jingle Player
@@ -287,7 +324,7 @@ Terminal=false
 EOF
 info ".desktop criado → aparece em Som e Vídeo"
 
-# ─── 13. Documentação ────────────────────────────────────────────────────────
+# ─── 14. Documentação ────────────────────────────────────────────────────────
 cat > "${PKG_DIR}/usr/share/doc/${APP_NAME}/copyright" << EOF
 ${DISPLAY_NAME} — Qt/C++ cross-platform port
 Original: Copyright (C) Horvárkosi Róbert <horvark@gmail.com>
@@ -299,7 +336,7 @@ EOF
 printf "${APP_NAME} (${VERSION})\n\n  * Qt/C++ port\n\n -- ${MAINTAINER}  $(date -R)\n" | \
     gzip -9 > "${PKG_DIR}/usr/share/doc/${APP_NAME}/changelog.Debian.gz"
 
-# ─── 14. DEBIAN/control ──────────────────────────────────────────────────────
+# ─── 15. DEBIAN/control ──────────────────────────────────────────────────────
 step "A criar DEBIAN/control"
 INSTALLED_SIZE=$(du -sk "${PKG_DIR}" | cut -f1)
 cat > "${PKG_DIR}/DEBIAN/control" << EOF
@@ -308,15 +345,9 @@ Version: ${VERSION}
 Architecture: ${ARCH}
 Maintainer: ${MAINTAINER}
 Installed-Size: ${INSTALLED_SIZE}
-Depends: libgstreamer1.0-0,
- gstreamer1.0-plugins-good,
- gstreamer1.0-plugins-bad,
- gstreamer1.0-libav,
- gstreamer1.0-pulseaudio | gstreamer1.0-alsa,
- libxcb1,
+Depends: libxcb1,
  libx11-6,
  libgl1
-Recommends: gstreamer1.0-plugins-ugly
 Section: sound
 Priority: optional
 Homepage: http://www.horvark.hu/jinglepalette
@@ -326,11 +357,11 @@ Description: Instant jingle player for radio broadcasting
  announce, VU meter and internet stream playback.
  .
  Supports MP3, WAV, OGG and streaming audio.
- Qt libraries bundled — no Qt installation required.
+ Qt + GStreamer runtime bundled — no system Qt/GStreamer required.
 EOF
 info "control criado"
 
-# ─── 15. Scripts pós-instalação ──────────────────────────────────────────────
+# ─── 16. Scripts pós-instalação ──────────────────────────────────────────────
 cat > "${PKG_DIR}/DEBIAN/postinst" << 'EOF'
 #!/bin/bash
 set -e
@@ -354,15 +385,17 @@ EOF
 chmod 755 "${PKG_DIR}/DEBIAN/postrm"
 
 # ─── 16. Permissões ──────────────────────────────────────────────────────────
-find "${PKG_DIR}" -type d -exec chmod 755 {} \;
+# ─── 17. Permissões ──────────────────────────────────────────────────────────
 find "${PKG_DIR}" -type f -exec chmod 644 {} \;
 chmod 755 "${PKG_DIR}${INSTALL_DIR}/bin/${APP_BINARY}"
 chmod 755 "${PKG_DIR}/usr/bin/${APP_NAME}"
 chmod 755 "${PKG_DIR}/DEBIAN/postinst"
+find "${PKG_DIR}${INSTALL_DIR}/gstreamer" -type f -name "*.so*" -exec chmod 755 {} \; 2>/dev/null || true
+chmod 755 "${PKG_DIR}${INSTALL_DIR}/gstreamer/libexec/gst-plugin-scanner" 2>/dev/null || true
 chmod 755 "${PKG_DIR}/DEBIAN/postrm"
 
 # ─── 17. Gera .deb ───────────────────────────────────────────────────────────
-step "A gerar .deb"
+# ─── 18. Gera .deb ───────────────────────────────────────────────────────────
 dpkg-deb --build --root-owner-group "${PKG_DIR}" "${DEB_NAME}"
 
 # ─── Resultado ───────────────────────────────────────────────────────────────

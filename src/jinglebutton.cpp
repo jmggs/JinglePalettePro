@@ -11,7 +11,7 @@ JingleButton::JingleButton(int index, QWidget *parent)
     setMaximumHeight(80);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     // Cor base igual ao gridBtnStyle
-    setStyleSheet("QPushButton { background: #3a3a3a; color: #ccc; font-size: 20px; font-weight: bold; border: 1px solid #555; border-radius: 4px; }"
+    setStyleSheet("QPushButton { background: #3a3a3a; color: #ccc; font-size: 18px; font-weight: bold; border: 1px solid #555; border-radius: 4px; }"
                   "QPushButton:hover  { background: #4a4a4a; color: #fff; }"
                   "QPushButton:pressed{ background: #252525; color: #fff; }"
                   "QPushButton:checked{ background: #00bb44; color: #000; border-color: #00ee55; }");
@@ -54,8 +54,20 @@ void JingleButton::paintEvent(QPaintEvent *e)
 {
     QPushButton::paintEvent(e);
 
+    QPainter p(this);
+
+    if (!m_durationText.isEmpty()) {
+        QFont f = font();
+        f.setPointSize(10);
+        f.setBold(false);
+        p.setFont(f);
+        // Green when idle, dark green when playing (green background)
+        p.setPen(isChecked() ? QColor(0, 60, 10) : QColor(0, 187, 68));
+        QRect r = rect().adjusted(2, 0, -2, -3);
+        p.drawText(r, Qt::AlignBottom | Qt::AlignHCenter, m_durationText);
+    }
+
     if (m_showLoop) {
-        QPainter p(this);
         // Draw small loop indicator in top-right corner
         QRect r(width() - 10, 2, 8, 8);
         p.setBrush(QColor(0, 120, 255));
